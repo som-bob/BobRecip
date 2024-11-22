@@ -69,8 +69,8 @@ class BobIngredient(Base):
     __tablename__ = "bob_ingredients"
 
     ingredient_id = Column(Integer, primary_key=True, autoincrement=True, comment="재료 ID")
-    name = Column(String(100), nullable=False, comment="재료명")
-    description = Column(String(500), comment="재료 설명")
+    ingredient_name = Column(String(100), nullable=False, comment="재료명")
+    ingredient_description = Column(String(500), comment="재료 설명")
     image_url = Column(String(255), comment="재료 이미지 URL")
     icon_url = Column(String(255), comment="재료 아이콘 URL")
     storage_method = Column(String(100), comment="보관 방법")
