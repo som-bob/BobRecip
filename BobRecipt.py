@@ -5,9 +5,10 @@ import requests
 from bs4 import BeautifulSoup
 
 from db.database import get_db
-from services.ingredient_service import save_ingredient
-from services.recipe_service import save_recipe
-from services.relationship_service import save_recipe_ingredient
+from services.save_recipe import save_recipe
+from services.save_recipe_detail import save_recipe_details
+from services.save_recipe_detail_ingredients import save_recipe_detail_ingredients
+from services.save_recipe_ingredients import save_recipe_ingredients
 
 
 def get_recipe_details(url):
@@ -88,15 +89,29 @@ def get_recipe_details(url):
 
 # 데이터 저장 로직
 def save_crawled_recipe(recipe_data, url):
-    db = next(get_db())
+    db = get_db()
+    """
+    Save crawled recipe data into the database.
+    """
     try:
-        # 레시피 저장
+        # Save main recipe
         recipe_id = save_recipe(db, recipe_data, url)
 
-        # 재료 저장 및 관계 추가
-        for ingredient in recipe_data["ingredients"]:
-            ingredient_id = save_ingredient(db, ingredient)
-            save_recipe_ingredient(db, recipe_id, ingredient_id, ingredient["amount"])
+        # Save ingredients
+        save_recipe_ingredients(db, recipe_id, recipe_data["ingredients"])
+
+        # Save recipe details
+        recipe_details = save_recipe_details(db, recipe_id, recipe_data["steps"])
+
+        # Save ingredients for each recipe step
+        for recipe_detail_id, ingredient_list in recipe_details:
+            save_recipe_detail_ingredients(db, recipe_detail_id, ingredient_list)
+
+        print(f"Recipe '{recipe_data['title']}' saved successfully!")
+
+    except Exception as e:
+        db.rollback()
+        print(f"Error occurred while saving recipe: {e}")
     finally:
         db.close()
 
