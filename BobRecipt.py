@@ -24,6 +24,11 @@ def get_recipe_details(url):
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
+    # 레시피 정보가 없을 경우 빈 값 리턴
+    if soup.find("script", text=lambda t: t and "레시피 정보가 없습니다" in t):
+        print(f"Recipe {url} is not available (missing recipe alert detected).")
+        return None
+
     # 레시피 제목
     title = soup.select_one('div.view2_summary h3').text.strip()
 
@@ -132,20 +137,20 @@ def save_crawled_recipe(recipe_data, url):
 
 # 레시피 ID 입력
 start_id = 7000043
-end_id = 8000001  # 테스트 범위로 변경, 실제는 8000000
+end_id = 7000045  # 테스트 범위로 변경, 실제는 8000000
 
 for recipe_id in range(start_id, end_id):
     url = f'https://www.10000recipe.com/recipe/{recipe_id}'
     try:
         recipe_data = get_recipe_details(url)
         if recipe_data:
-            # print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
-            try:
-                save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
-                print(f"Recipe {recipe_id} saved successfully.")
-            except Exception as e:
-                print(f"Error occurred while saving recipe(id={recipe_id}): {e}")
-                break
+            print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
+            # try:
+            #     save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
+            #     print(f"Recipe {recipe_id} saved successfully.")
+            # except Exception as e:
+            #     print(f"Error occurred while saving recipe(id={recipe_id}): {e}")
+            #     break
         else:
             print(f"Skipping Recipe {recipe_id}.")
     except Exception as e:
