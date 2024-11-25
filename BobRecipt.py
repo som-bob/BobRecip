@@ -27,6 +27,9 @@ def get_recipe_details(url):
     # 레시피 제목
     title = soup.select_one('div.view2_summary h3').text.strip()
 
+    # 레시피 이미지
+    image = soup.select('.centeredcrop img')[0]['src']
+
     # 레시피 설명
     description = soup.select_one('div.view2_summary_in').text.strip()
 
@@ -76,6 +79,7 @@ def get_recipe_details(url):
     # 결과를 딕셔너리로 정리
     recipe_data = {
         'title': title,
+        'image': image,
         'description': description,
         'servings': servings,
         'cooking_time': cooking_time,
@@ -129,8 +133,8 @@ for recipe_id in range(start_id, end_id):
     if recipe_data:
         # JSON 파일로 저장
         # with open(f'recipe_{recipe_id}.json', 'w', encoding='utf-8') as f:
-        # print(dump)
-        save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
+        print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
+        # save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
     #
     # print(f"Recipe {recipe_id} saved successfully.")
 

@@ -5,6 +5,7 @@ def save_recipe(session, recipe_data, url):
     """Save recipe data into bob_recipe table."""
     recipe = BobRecipe(
         recipe_name=recipe_data["title"],
+        image_url=recipe_data["image"],
         recipe_description=recipe_data["description"],
         servings=recipe_data["servings"],
         cooking_time=extract_cooking_time(recipe_data["cooking_time"]),
