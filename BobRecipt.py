@@ -41,10 +41,10 @@ def get_recipe_details(url):
 
     # 재료 목록 크롤링
     ingredients_section = soup.select('div.ready_ingre3 ul li')
-    ingredients = []    # 재료 목록 + 양념
+    ingredients = []  # 재료 목록 + 양념
     for ingredient in ingredients_section:
         name = ingredient.select_one('a').text.strip()
-        if name=="구매" :
+        if name == "구매":
             continue
         volume = ingredient.select_one('span').text.strip()
         amount = ingredient.select_one('b').text.strip() if ingredient.select_one('b') else '적당량'
@@ -123,6 +123,7 @@ def save_crawled_recipe(recipe_data, url):
     finally:
         db.close()
 
+
 # 레시피 ID 입력
 start_id = 7000000
 end_id = 7000001  # 테스트 범위로 변경, 실제는 8000000
@@ -131,13 +132,12 @@ for recipe_id in range(start_id, end_id):
     url = f'https://www.10000recipe.com/recipe/{recipe_id}'
     recipe_data = get_recipe_details(url)
     if recipe_data:
-        # JSON 파일로 저장
-        # with open(f'recipe_{recipe_id}.json', 'w', encoding='utf-8') as f:
         print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
-        # save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
-    #
-    # print(f"Recipe {recipe_id} saved successfully.")
-
+        try:
+            save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
+            print(f"Recipe {recipe_id} saved successfully.")
+        except Exception as e:
+            print(f"Error occurred while saving recipe(id={recipe_id}): {e}")
     else:
         print(f"Skipping Recipe {recipe_id}.")
 

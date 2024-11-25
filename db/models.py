@@ -74,6 +74,7 @@ class BobIngredient(Base):
     icon_url = Column(String(255), comment="재료 아이콘 URL")
     storage_method = Column(String(100), comment="보관 방법")
     storage_days = Column(Integer, comment="보관 가능 일수")
+    reg_id = Column(String(100), nullable=False, comment="글쓴이 이메일")
     reg_date = Column(DateTime, default=datetime.datetime.utcnow, comment="등록 날짜")
     mod_date = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow, comment="수정 날짜")
 
