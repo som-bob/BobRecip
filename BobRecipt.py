@@ -36,8 +36,14 @@ def get_recipe_details(url):
     # 인원수, 시간, 난이도
     info_section = soup.select('div.view2_summary_info span')
     servings = info_section[0].text.strip()  # ex) '3인분'
-    cooking_time = info_section[1].text.strip()  # ex) '30분 이내'
-    difficulty = info_section[2].text.strip()  # ex) '초급'
+    if len(info_section) > 1:
+        cooking_time = info_section[1].text.strip()  # ex) '30분 이내'
+    else:
+        cooking_time = ""
+    if len(info_section) > 2:
+        difficulty = info_section[2].text.strip()  # ex) '초급'
+    else:
+        difficulty = ""
 
     # 재료 목록 크롤링
     ingredients_section = soup.select('div.ready_ingre3 ul li')
@@ -125,15 +131,15 @@ def save_crawled_recipe(recipe_data, url):
 
 
 # 레시피 ID 입력
-start_id = 7000000
-end_id = 7000001  # 테스트 범위로 변경, 실제는 8000000
+start_id = 7000043
+end_id = 8000001  # 테스트 범위로 변경, 실제는 8000000
 
 for recipe_id in range(start_id, end_id):
     url = f'https://www.10000recipe.com/recipe/{recipe_id}'
     try:
         recipe_data = get_recipe_details(url)
         if recipe_data:
-            print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
+            # print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
             try:
                 save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
                 print(f"Recipe {recipe_id} saved successfully.")
