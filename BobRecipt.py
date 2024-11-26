@@ -1,5 +1,6 @@
 import json
 import time
+import re
 
 import requests
 from bs4 import BeautifulSoup
@@ -57,6 +58,8 @@ def get_recipe_details(url):
         name = ingredient.select_one('a').text.strip()
         if name == "구매":
             continue
+        else:
+            name = re.sub(r'\s+', ' ', name)
         volume = ingredient.select_one('span').text.strip()
         amount = ingredient.select_one('b').text.strip() if ingredient.select_one('b') else '적당량'
         ingredients.append({
@@ -136,8 +139,8 @@ def save_crawled_recipe(recipe_data, url):
 
 
 # 레시피 ID 입력
-start_id = 7000043
-end_id = 7000045  # 테스트 범위로 변경, 실제는 8000000
+start_id = 7001170
+end_id = 8000001  # 테스트 범위로 변경, 실제는 8000000
 
 for recipe_id in range(start_id, end_id):
     url = f'https://www.10000recipe.com/recipe/{recipe_id}'
@@ -145,15 +148,15 @@ for recipe_id in range(start_id, end_id):
         recipe_data = get_recipe_details(url)
         if recipe_data:
             print(json.dumps(recipe_data, ensure_ascii=False, indent=4))
-            # try:
-            #     save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
-            #     print(f"Recipe {recipe_id} saved successfully.")
-            # except Exception as e:
-            #     print(f"Error occurred while saving recipe(id={recipe_id}): {e}")
-            #     break
+            try:
+                save_crawled_recipe(json.dumps(recipe_data, ensure_ascii=False, indent=4), url)
+                print(f"Recipe {recipe_id} saved successfully.")
+            except Exception as e:
+                print(f"Error occurred while saving recipe(id={recipe_id}): {e}")
+                break
         else:
             print(f"Skipping Recipe {recipe_id}.")
     except Exception as e:
         print(f"Error occurred while read recipe(id={recipe_id}): {e}")
 
-    time.sleep(2)  # 2초 대기
+    time.sleep(3)  # 3초 대기
