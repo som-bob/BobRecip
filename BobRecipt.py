@@ -157,6 +157,6 @@ for recipe_id in range(start_id, end_id):
         else:
             print(f"Skipping Recipe {recipe_id}.")
     except Exception as e:
-        print(f"Error occurred while read recipe(id={recipe_id}): {e}")
+        print(f"Error! occurred while read recipe(id={recipe_id}): {e}")
 
     time.sleep(3)  # 3초 대기
