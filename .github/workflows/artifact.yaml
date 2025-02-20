@@ -1,0 +1,34 @@
+name: artifact
+on: push
+
+jobs:
+  upload-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create test file
+        run: echo hello-world > hello.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-test
+          path: hello.txt
+
+  download-artifact:
+    runs-on: ubuntu-latest
+    needs: [upload-artifact]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact-test
+          path: artifact-test/
+
+      - name: Check downloaded file
+        run: cat artifact-test/hello.txt
