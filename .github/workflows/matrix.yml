@@ -5,11 +5,11 @@ jobs:
   get-matrix:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
-        version: [12,14]
-    runs-on: ${{metrix.os}}
+        os: [ windows-latest, ubuntu-latest ]
+        version: [ 12,14 ]
+    runs-on: ${{matrix.os}}
     steps:
-    - name: check metrix
-      run: |
-        echo ${{ matrix.os }}
-        echo ${{ matrix.version }}
+      - name: check metrix
+        run: |
+          echo ${{ matrix.os }}
+          echo ${{ matrix.version }}
