@@ -1,6 +1,6 @@
 name: environment
 on: push
-
+  
 jobs:
   get-env:
     runs-on: ubuntu-latest
