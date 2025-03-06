@@ -18,7 +18,6 @@ jobs:
         run: echo ${{ github.event_name }}
   job3:
     runs-on: ubuntu-latest
-    if: github.event_name != 'push' #push가 아닐 때 job 실행
     steps:
       - name: get event name
         if: github.event_name == 'push' #push일때 step 실행
