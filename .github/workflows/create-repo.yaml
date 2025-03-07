@@ -1,0 +1,28 @@
+name: create-repo
+on:
+  workflow-dispatch:
+    inputs:
+      prefix:
+        description: 'set repo prefix'
+        required: true #항상 넣어야 되는 값
+        default: 'service'
+        type: choice
+        options:
+        - example
+        - service
+      name:
+        description: 'set repo name'
+        required: true
+        default: 'github-actions'
+        type: string
+
+jobs:
+  create-repo-automation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: gh auth login #해당 step을 통해 Action job에서 깃허브 권한을 사용할 수 있게 됩니다.
+      run: |
+        echo ${{ secrets.PERSONAL_ACCESS_TOKEN }} | gh auth login --with-token
+    - name: create-repo #입력 받은 인풋 값으로 repo를 만드는 커맨드를 작성 했습니다.
+      run: |
+        gh repo create som-bob/${{ inputs.prefix }}-${{ inputs.name }} --public --add-readme
