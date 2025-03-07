@@ -24,5 +24,20 @@ jobs:
       run: |
         echo ${{ secrets.PERSONAL_ACCESS_TOKEN }} | gh auth login --with-token
     - name: create-repo #입력 받은 인풋 값으로 repo를 만드는 커맨드를 작성 했습니다.
+      id: create-repo
       run: |
         gh repo create som-bob/${{ inputs.prefix }}-${{ inputs.name }} --public --add-readme
+    - name: slack
+      if: always() # 레포 생성에 실패하더라도 무조건 실행
+      uses: slackapi/slack-github-action@v2.0.0
+      with:
+        webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+        webhook-type: INCOMING-WEBHOOK
+        payload: |
+          text: "create repo result"
+          attachments:
+            - color: "28a745"
+              fields:
+                - title: "create repo result ${{ steps.create-repo.outcome }}"
+                  short: true
+                  value: ${{ inputs.prefix }}-${{ inputs.name }}
