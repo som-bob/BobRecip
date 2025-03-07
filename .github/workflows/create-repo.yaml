@@ -1,6 +1,6 @@
 name: create-repo
 on:
-  workflow-dispatch:
+  workflow_dispatch:
     inputs:
       prefix:
         description: 'set repo prefix'
